@@ -34,3 +34,15 @@ The transformer model consists of:
 - Positional encoding to maintain sequence order information
 - Masked self-attention in the decoder to prevent looking ahead
 - Scaled dot-product attention as the core attention mechanism
+
+## Data Preprocessing
+```
+document, summary = utils.preprocess(train_data)
+document_test, summary_test = utils.preprocess(test_data)
+
+tokenizer = tf.keras.preprocessing.text.Tokenizer(filters=filters, oov_token=oov_token, lower=False)
+tokenizer.fit_on_texts(documents_and_summary)
+
+inputs = tokenizer.texts_to_sequences(document)
+targets = tokenizer.texts_to_sequences(summary)
+```
