@@ -14,6 +14,7 @@ This project implements a transformer model for text summarization using TensorF
 6. [Inference](#inference)
 7. [Key Functions](#key-functions)
 8. [Custom Learning Rate Scheduler](#custom-learning-rate-scheduler)
+9. [Results](#results)
 
 ## Model Architecture
 
@@ -94,3 +95,22 @@ summary = summarize(transformer, input_document)
 - train_step(model, inp, tar): Performs one training step
 - next_word(model, encoder_input, output): Predicts the next word in the summary
 - summarize(model, input_document): Generates a complete summary
+
+## Custom Learning Rate Scheduler
+```
+class CustomSchedule(tf.keras.optimizers.schedules.LearningRateSchedule):
+    def __init__(self, d_model, warmup_steps=4000):
+        super(CustomSchedule, self).__init__()
+        self.d_model = tf.cast(d_model, dtype=tf.float32)
+        self.warmup_steps = warmup_steps
+    
+    def __call__(self, step):
+        step = tf.cast(step, dtype=tf.float32)
+        arg1 = tf.math.rsqrt(step)
+        arg2 = step * (self.warmup_steps ** -1.5)
+
+        return tf.math.rsqrt(self.d_model) * tf.math.minimum(arg1, arg2)
+```
+
+## Results
+![image](https://github.com/user-attachments/assets/c9f322db-4f25-497a-bd31-20dc1ebe182b)
